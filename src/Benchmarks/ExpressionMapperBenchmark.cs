@@ -1,6 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Attributes.Columns;
-using ExpressionMapper;
 
 namespace Benchmarks
 {
@@ -10,35 +9,35 @@ namespace Benchmarks
         [GlobalSetup]
         public override void Initial()
         {
-            Mapper<TestA, TestB>.Map(new TestA());
+            ExpressionMapper.ExpressionMapper.Map<TestA, TestB>(new TestA());
         }
 
         [Benchmark]
         public override void Nomal()
         {
             var model = GetNomalModel();
-            var b = Mapper<TestA, TestB>.Map(model);
+            var b = ExpressionMapper.ExpressionMapper.Map<TestA, TestB>(model);
         }
 
         [Benchmark]
         public override void Complex()
         {
             var model = GetComplexModel();
-            var b = Mapper<TestA, TestB>.Map(model);
+            var b = ExpressionMapper.ExpressionMapper.Map<TestA, TestB>(model);
         }
 
         [Benchmark]
         public override void Nest()
         {
             var model = GetNestModel();
-            var b = Mapper<TestA, TestB>.Map(model);
+            var b = ExpressionMapper.ExpressionMapper.Map<TestA, TestB>(model);
         }
 
         [Benchmark]
         public override void List()
         {
             var model = GetListModel();
-            var b = Mapper<TestA, TestB>.Map(model);
+            var b = ExpressionMapper.ExpressionMapper.Map<TestA, TestB>(model);
         }
     }
 }

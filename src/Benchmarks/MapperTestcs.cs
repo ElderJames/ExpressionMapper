@@ -205,11 +205,11 @@ namespace Benchmarks
         public static void Exec(TestA model)
         {
             //表达式
-            Mapper<TestA, TestB>.Map(model);
+            ExpressionMapper.ExpressionMapper.Map<TestA, TestB>(model);
             var sw = Stopwatch.StartNew();
             for (int i = 0; i < Count; i++)
             {
-                var b = Mapper<TestA, TestB>.Map(model);
+                var b = ExpressionMapper.ExpressionMapper.Map<TestA, TestB>(model);
             }
             sw.Stop();
             Console.WriteLine($"表达式的时间:{sw.ElapsedMilliseconds}ms");

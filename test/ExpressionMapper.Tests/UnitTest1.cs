@@ -31,7 +31,7 @@ namespace ExpressionMapper.Tests
                 NullableToNonNullableTimeHasValue = time
             };
 
-            var targetObj = Mapper<SourceType, TargetType>.Map(sourceObj);
+            var targetObj = ExpressionMapper.Map<SourceType, TargetType>(sourceObj);
             Assert.NotNull(targetObj);
             Assert.Equal(10, targetObj.Int);
             Assert.Equal(long.MaxValue, targetObj.Long);
@@ -78,7 +78,7 @@ namespace ExpressionMapper.Tests
 
             var targetObj = new TargetType();
 
-            Mapper<SourceType, TargetType>.Map(sourceObj, targetObj);
+            ExpressionMapper.Map(sourceObj, targetObj);
             Assert.NotNull(targetObj);
             Assert.Equal(10, targetObj.Int);
             Assert.Equal(long.MaxValue, targetObj.Long);
@@ -103,17 +103,17 @@ namespace ExpressionMapper.Tests
         {
             Assert.Throws<NotSupportedException>(() =>
             {
-                Mapper<IEnumerable<POCO>, IEnumerable<POCO>>.Map(new List<POCO>() { new POCO() { Hello = "World" } });
+                ExpressionMapper.Map<IEnumerable<POCO>, IEnumerable<POCO>>(new List<POCO>() { new POCO() { Hello = "World" } });
             });
 
             Assert.Throws<NotSupportedException>(() =>
             {
-                Mapper<List<POCO>, List<POCO>>.Map(new List<POCO>() { new POCO() { Hello = "World" } });
+                ExpressionMapper.Map<List<POCO>, List<POCO>>(new List<POCO>() { new POCO() { Hello = "World" } });
             });
 
             Assert.Throws<NotSupportedException>(() =>
             {
-                Mapper<POCO[], POCO[]>.Map(new[] { new POCO() { Hello = "World" } });
+                ExpressionMapper.Map<POCO[], POCO[]>(new[] { new POCO() { Hello = "World" } });
             });
         }
     }
