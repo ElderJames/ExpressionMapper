@@ -19,13 +19,13 @@
         /// </summary>
         /// <typeparam name="TSource">源类型.</typeparam>
         /// <typeparam name="TTarget">目标类型.</typeparam>
-        /// <param name="from">源对象.</param>
+        /// <param name="source">源对象.</param>
         /// <returns>目标类型的对象.</returns>
-        public static TTarget Map<TSource, TTarget>(TSource from)
+        public static TTarget Map<TSource, TTarget>(TSource source)
             where TSource : class
             where TTarget : class
         {
-            return MapperInternal<TSource, TTarget>.Map(from);
+            return MapperInternal<TSource, TTarget>.Map(source);
         }
 
         /// <summary>
@@ -33,14 +33,14 @@
         /// </summary>
         /// <typeparam name="TSource">源类型.</typeparam>
         /// <typeparam name="TTarget">目标类型.</typeparam>
-        /// <param name="from">源对象.</param>
+        /// <param name="source">源对象.</param>
         /// <param name="otherSetup">其他配置.</param>
         /// <returns>目标类型的对象.</returns>
-        public static TTarget Map<TSource, TTarget>(TSource from, Action<TTarget> otherSetup)
+        public static TTarget Map<TSource, TTarget>(TSource source, Action<TTarget> otherSetup)
             where TSource : class
             where TTarget : class
         {
-            TTarget to = Map<TSource, TTarget>(from);
+            TTarget to = Map<TSource, TTarget>(source);
             otherSetup(to);
             return to;
         }
@@ -50,27 +50,27 @@
         /// </summary>
         /// <typeparam name="TSource">源类型.</typeparam>
         /// <typeparam name="TTarget">目标类型.</typeparam>
-        /// <param name="fromList">源对象列表.</param>
+        /// <param name="sourceList">源对象列表.</param>
         /// <returns>目标类型的对象列表.</returns>
-        public static IEnumerable<TTarget> Map<TSource, TTarget>(IEnumerable<TSource> fromList)
+        public static IEnumerable<TTarget> Map<TSource, TTarget>(IEnumerable<TSource> sourceList)
             where TSource : class
             where TTarget : class
         {
-            return MapperInternal<TSource, TTarget>.MapList(fromList);
+            return MapperInternal<TSource, TTarget>.MapList(sourceList);
         }
 
-        public static List<TTarget> Map<TSource, TTarget>(List<TSource> fromList)
+        public static List<TTarget> Map<TSource, TTarget>(List<TSource> sourceList)
             where TSource : class
             where TTarget : class
         {
-            return MapperInternal<TSource, TTarget>.MapList(fromList).ToList();
+            return MapperInternal<TSource, TTarget>.MapList(sourceList).ToList();
         }
 
-        public static TTarget[] Map<TSource, TTarget>(TSource[] fromList)
+        public static TTarget[] Map<TSource, TTarget>(TSource[] sourceList)
             where TSource : class
             where TTarget : class
         {
-            return MapperInternal<TSource, TTarget>.MapList(fromList).ToArray();
+            return MapperInternal<TSource, TTarget>.MapList(sourceList).ToArray();
         }
 
         public static void Map<TSource, TTarget>(TSource source, TTarget target)
