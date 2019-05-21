@@ -1,14 +1,14 @@
-﻿namespace ExpressionMapper
-{
-    using System.Collections;
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Reflection;
-    using System.Diagnostics;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 
+namespace ExpressionMapper
+{
     /// <summary>
     /// 表达式树实现的轻量Mapper.
     /// </summary>
@@ -59,11 +59,18 @@
             return MapperInternal<TSource, TTarget>.MapList(sourceList);
         }
 
-        public static List<TTarget> Map<TSource, TTarget>(List<TSource> sourceList)
+        public static IEnumerable<TTarget> Map<TSource, TTarget>(IEnumerable<TSource> sourceList, Action<TSource, TTarget> otherSetup)
             where TSource : class
             where TTarget : class
         {
-            return MapperInternal<TSource, TTarget>.MapList(sourceList).ToList();
+            return MapperInternal<TSource, TTarget>.MapList(sourceList, otherSetup);
+        }
+
+        public static IEnumerable<TTarget> Map<TSource, TTarget>(List<TSource> sourceList)
+            where TSource : class
+            where TTarget : class
+        {
+            return MapperInternal<TSource, TTarget>.MapList(sourceList);
         }
 
         public static TTarget[] Map<TSource, TTarget>(TSource[] sourceList)
@@ -110,7 +117,22 @@
                     MapFunc = GetMapFunc();
                 }
 
-                return sources.Select(MapFunc);
+                return Enumerable.Select(sources, MapFunc);
+            }
+
+            public static IEnumerable<TTarget> MapList(IEnumerable<TSource> sources, Action<TSource, TTarget> otherSetup)
+            {
+                if (MapFunc == null)
+                {
+                    MapFunc = GetMapFunc();
+                }
+
+                return Enumerable.Select(sources, (s) =>
+                {
+                    var target = MapFunc(s);
+                    otherSetup(s, target);
+                    return target;
+                });
             }
 
             /// <summary>
@@ -363,7 +385,7 @@
                         {
                             // if (p.xx.HasValue){
                             //     if (p.xx.Value != t.xx){
-                            //      t.xx=p.Vale
+                            //      t.xx=p.xx.Value
                             //    }
                             //    else {
                             //        t.xx=default
@@ -373,9 +395,9 @@
                             //   t.xx=default
                             var hasValueExpression = Expression.Equal(Expression.Property(sourceProperty, "HasValue"), Expression.Constant(true));
                             var notEqualValueExpression = Expression.NotEqual(Expression.Property(sourceProperty, "Value"), targetProperty);
-                            var notEqualCondition = Expression.Condition(notEqualValueExpression, Expression.Convert(sourceProperty, targetItem.PropertyType), Expression.Default(targetItem.PropertyType));
+                            var notEqualCondition = Expression.IfThen(notEqualValueExpression, Expression.Assign(targetProperty, Expression.Convert(sourceProperty, targetItem.PropertyType)));
 
-                            expressions.Add(Expression.IfThenElse(hasValueExpression, Expression.Assign(targetProperty, notEqualCondition), Expression.Assign(targetProperty, Expression.Default(targetItem.PropertyType))));
+                            expressions.Add(Expression.IfThenElse(hasValueExpression, notEqualCondition, Expression.Assign(targetProperty, Expression.Default(targetItem.PropertyType))));
                             continue;
                         }
 
