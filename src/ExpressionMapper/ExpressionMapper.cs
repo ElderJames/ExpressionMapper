@@ -117,7 +117,7 @@ namespace ExpressionMapper
                     MapFunc = GetMapFunc();
                 }
 
-                return Enumerable.Select(sources, MapFunc);
+                return sources.Select(MapFunc);
             }
 
             public static IEnumerable<TTarget> MapList(IEnumerable<TSource> sources, Action<TSource, TTarget> otherSetup)
@@ -127,7 +127,7 @@ namespace ExpressionMapper
                     MapFunc = GetMapFunc();
                 }
 
-                return Enumerable.Select(sources, (s) =>
+                return sources.Select((s) =>
                 {
                     var target = MapFunc(s);
                     otherSetup(s, target);
